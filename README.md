@@ -80,28 +80,46 @@ func main() {
 		//// 每个struct放入单独的文件,默认false,放入同一个文件(暂未提供)
 		//SeperatFile: false,
 	})
-	// 开始迁移转换
-	err := t2t.
-		// 指定某个表,如果不指定,则默认全部表都迁移
-		Table("user").
-		// 表前缀
-		Prefix("prefix_").
-		// 是否添加json tag
-		EnableJsonTag(true).
-		// 生成struct的包名(默认为空的话, 则取名为: package model)
-		PackageName("model").
-		// tag字段的key值,默认是orm
-		TagKey("orm").
-		// 是否添加结构体方法获取表名
-		RealNameMethod("TableName").
-		// 生成的结构体保存路径
-		SavePath("/Users/fizz/go/src/github.com/gohouse/gupiao/model/model.go").
-		// 数据库dsn,这里可以使用 t2t.DB() 代替,参数为 *sql.DB 对象
-		Dsn("root:root@tcp(localhost:3306)/test?charset=utf8").
-		// 执行
-		Run()
-	
-	fmt.Println(err)
+
+	tableList := []string{
+		"account",
+		"accountActivity",
+		"application",
+		"applicationRegistration",
+		"cif",
+		"otp",
+		"role",
+		"sof",
+		"user",
+	}
+
+	var err error
+	for _, each := range tableList {
+		tableName := string(each)
+		// 开始迁移转换
+		err = t2t.
+			// 指定某个表,如果不指定,则默认全部表都迁移
+			Table(tableName).
+			// 表前缀
+			// Prefix("prefix_").
+			// 是否添加json tag
+			EnableJsonTag(true).
+			// 生成struct的包名(默认为空的话, 则取名为: package model)
+			PackageName("models").
+			// tag字段的key值,默认是orm
+			TagKey("orm").
+			// 是否添加结构体方法获取表名
+			RealNameMethod("TableName").
+			// 生成的结构体保存路径
+			SavePath("/Users/jaka/go/src/go-otto-user/models/" + tableName + ".go").
+			// 数据库dsn,这里可以使用 t2t.DB() 代替,参数为 *sql.DB 对象
+			Dsn("root:root!@tcp(localhost:3306)/optima?charset=utf8").
+			// 执行
+			Run()
+
+		fmt.Println(err)
+
+	}
 }
 ```
 
